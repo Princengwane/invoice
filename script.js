@@ -143,3 +143,46 @@ const body = `Dear ${clientName},%0D%0A%0D%0A` +
 window.location.href = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
 });
 }
+
+function saveInvoiceToDatabase(){
+
+const clientName = document.getElementById("clientName").value;
+const clientEmail = document.getElementById("clientEmail").value;
+const invoiceNum = document.getElementById("invoiceNumber").innerText.replace("Invoice #: ", "");
+const total = document.getElementById("grandTotal").innerText.replace("R","");
+
+fetch("https://script.google.com/macros/s/AKfycbzegttqiqLIB0gwC9xEuNN_i4gFcHMlEK6ZXGp4eif3BzymBPyxHmmQ7Kd4EyM1Ix3asA/exec",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+action:"createInvoice",
+invoiceId:invoiceNum,
+clientName:clientName,
+email:clientEmail,
+amount:total
+
+})
+
+})
+
+.then(response => response.json())
+
+.then(data => {
+
+console.log("Invoice saved:",data)
+
+})
+
+.catch(error => {
+
+console.error("Error:",error)
+
+})
+
+}
